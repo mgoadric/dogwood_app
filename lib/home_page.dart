@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:dogwood_app/animal_dialog.dart';
+import 'package:dogwood_app/animal_list.dart';
 import 'package:dogwood_app/detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart' // new
     hide EmailAuthProvider, PhoneAuthProvider;    // new
@@ -12,10 +14,28 @@ import 'package:provider/provider.dart';          // new
 import 'app_state.dart';                          // new
 import 'src/authentication.dart';  
 
-import 'src/widgets.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+
+  final AnimalListController controller = AnimalListController();
+  final TextEditingController textController = TextEditingController();
+
+   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final AnimalListController controller = AnimalListController();
+
+  void handleNewAnimal(String animalName) {
+    setState(() {
+      controller.addAnimal(animalName);
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,42 +52,47 @@ class HomePage extends StatelessWidget {
               },
             ),
             if (appState.loggedIn) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                child: ListTile(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                title: Text('Dog'),
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DetailPage(title: 'Dog')),
-                  );
-                 },
-                ),
-            ),
                 Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-                child: ListTile(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 2, color: Colors.blue),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                title: Text('Cat'),
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DetailPage(title: 'Cat')),
+                  padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+                  child: Column(
+                  children: controller.animals.map((animal) {
+                  return ListTile(
+                    shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 2, color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                    ),
+                    title: Text(animal.name),
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DetailPage(title: animal.name)),
+                      );
+                    },
                   );
-                 },
-                ),
-            )
-            ],
+                }).toList(),
+              ),
+            ),
           ],
+        ], 
         ),
       ),
+      floatingActionButton: Consumer<ApplicationState>(
+    builder: (context, appState, _) => appState.loggedIn
+        ? FloatingActionButton(
+            key: const Key("AddButton"),
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            child: const Icon(Icons.add),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => AnimalDialog(onListAdded: handleNewAnimal),
+              );
+            },
+          )
+        : SizedBox.shrink(),),
     );
   }
 }
+
+
