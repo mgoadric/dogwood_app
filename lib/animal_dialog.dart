@@ -24,7 +24,7 @@ class AnimalDialogState extends State<AnimalDialog> {
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           style: TextButton.styleFrom(
-            foregroundColor: Colors.blue, // sets text color to blue
+            foregroundColor: Colors.blue, 
           ),
           child: const Text('Cancel'),
           
@@ -33,12 +33,12 @@ class AnimalDialogState extends State<AnimalDialog> {
           onPressed: () {
             final text = _controller.text.trim();
             if (text.isNotEmpty) {
-              widget.onListAdded(text); // call the callback with input
+              widget.onListAdded(text); 
               Navigator.of(context).pop();
             }
           },
           style: TextButton.styleFrom(
-            foregroundColor: Colors.blue, // sets text color to blue
+            foregroundColor: Colors.blue, 
           ),
           child: const Text('Add'),
         ),

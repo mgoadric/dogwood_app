@@ -1,6 +1,8 @@
 // Copyright 2022 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// ----------------ask about this license stuff---------------------
+
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; 
@@ -100,7 +102,7 @@ final _router = GoRouter(
           ],
         ),
         GoRoute(
-          path: 'profile',
+          path: 'profile',   //this path is commented out in authentication.dart until I'm ready to deal with it
           builder: (context, state) {
             return ProfileScreen(
               providers: const [],

@@ -1,6 +1,7 @@
 // Copyright 2022 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// ----------------ask about this license stuff---------------------
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ class AuthFunc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 24, bottom: 8),
@@ -25,6 +27,7 @@ class AuthFunc extends StatelessWidget {
             },
             child: !loggedIn ? const Text('Login') : const Text('Logout'),
           ),
+          
         ),
         //Visibility(
           //visible: loggedIn,

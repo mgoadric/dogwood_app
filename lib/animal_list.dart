@@ -7,7 +7,7 @@ class AnimalListController {
     animals.add(Animal(name: name));
   }
 
-  void removeAnimal(Animal animal) {
+  void removeAnimal(Animal animal) { //not implemented yet
     animals.remove(animal);
   }
 }
