@@ -9,7 +9,6 @@ import 'package:dogwood_app/detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart' 
     hide EmailAuthProvider, PhoneAuthProvider;    
 import 'package:flutter/material.dart';       
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';         
 
 import 'app_state.dart';                          
@@ -70,14 +69,14 @@ class _HomePageState extends State<HomePage> {
                     },
                   );
                 }).toList(),
-              ),
+                  ),
             ),
           ],
-        ], 
+        ],
         ),
       ),
       floatingActionButton: Consumer<ApplicationState>(
-    builder: (context, appState, _) => appState.loggedIn //make sure only people who are loggin in can add animals
+    builder: (context, appState, _) => appState.loggedIn //make sure only people who are logged in in can add animals
         ? FloatingActionButton(
             key: const Key("AddButton"),
             backgroundColor: Colors.blue,
