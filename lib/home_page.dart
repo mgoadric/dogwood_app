@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                   children: controller.animals.map((animal) {
                   return ListTile(
                     shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 2, color: Colors.blue),
+                    side: BorderSide(width: 2, color: Colors.lightBlue),
                     borderRadius: BorderRadius.circular(8),
                     ),
                     title: Text(animal.name),
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     builder: (context, appState, _) => appState.loggedIn //make sure only people who are logged in in can add animals
         ? FloatingActionButton(
             key: const Key("AddButton"),
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.lightBlue,
             foregroundColor: Colors.white,
             child: const Icon(Icons.add),
             onPressed: () {

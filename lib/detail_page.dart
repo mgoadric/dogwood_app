@@ -13,19 +13,50 @@ class DetailPage extends StatefulWidget {
 class DetailPageState extends State<DetailPage>{
   bool vaccineCheck = false;
   bool dewormCheck = false;
+  bool fleaCheck = false;
+  bool fecalCheck = false;
   String? vaccineType;
   String? dewormType;
+  String? fleaType;
+  String?fecalLocation;
   DateTime? vaccineTime;
   DateTime? dewormTime;
+  DateTime? fleaTime;
+  DateTime? fecalTime;
 
   final List<String> vaccineTypes = [
-    'Vaccine 1',
-    'Vaccine 2',
+    'DAP',
+    'DAPL',
+    'LEPTO',
+    'FVRCP',
+    'Other',
   ];
 
   final List<String> dewormTypes = [
-    'Dewormer 1',
-    'Dewormer 2',
+    'Metro',
+    'Panacur',
+    'Ponazuril',
+    'Strongid',
+    'Other',
+  ];
+
+  final List<String> fleaTypes = [
+    'Bravecto',
+    'Capstar',
+    'Cheristin',
+    'Credelio Quattro',
+    'First Shield Trio',
+    'Nexgard Plus',
+    'Revolution',
+    'Other',
+  ];
+
+  final List<String> fecalLocations = [
+    'AK',
+    'Dr. B',
+    'NT',
+    'TAH',
+    'Other',
   ];
 
 
@@ -42,15 +73,26 @@ class DetailPageState extends State<DetailPage>{
               children: [
                 Checkbox(
                   value: vaccineCheck, 
-                  onChanged: (bool? value) {setState(() => vaccineCheck = value ?? false);}
+                  onChanged: (bool? value) {setState(() => vaccineCheck = value ?? false);},
+                  activeColor: Colors.lightBlue,
                   ),
                   Text("Vaccine"),
                   if (vaccineCheck) ...[
                     
                   SizedBox(width: 12),
+                  DropdownButton<String>(
+                    hint: Text("Type"),
+                    value: vaccineType,
+                    items: vaccineTypes.map((type) => DropdownMenuItem(
+                            value: type, child: Text(type))).toList(),
+                    onChanged: (value) {
+                      setState(() => vaccineType = value);
+                    },
+                  ),
+                   SizedBox(width: 12),
                   OutlinedButton(
                     child: Text(vaccineTime == null
-                        ? "Date"
+                        ? "${DateTime.now().toLocal()}".split(' ')[0]
                         : "${vaccineTime!.toLocal()}".split(' ')[0]),
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -63,18 +105,6 @@ class DetailPageState extends State<DetailPage>{
                       }
                     },
                   ),
-                  SizedBox(width: 12),
-                  DropdownButton<String>(
-                    hint: Text("Type"),
-                    value: vaccineType,
-                    items: vaccineTypes
-                        .map((type) => DropdownMenuItem(
-                            value: type, child: Text(type)))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => vaccineType = value);
-                    },
-                  ),
                   ]
               ],),
               Row(
@@ -83,13 +113,24 @@ class DetailPageState extends State<DetailPage>{
                   onChanged: (bool? value) {
                     setState(() => dewormCheck = value ?? false);
                   },
+                  activeColor: Colors.lightBlue,
                   ),
                   Text("Deworm"),
                 if (dewormCheck) ...[
                   SizedBox(width: 12),
+                  DropdownButton<String>(
+                    hint: Text("Type"),
+                    value: dewormType,
+                    items: dewormTypes.map((type) => DropdownMenuItem(
+                            value: type, child: Text(type))).toList(),
+                    onChanged: (value) {
+                      setState(() => dewormType = value);
+                    },
+                  ),
+                   SizedBox(width: 12),
                   OutlinedButton(
                     child: Text(dewormTime == null
-                        ? "Date"
+                        ? "${DateTime.now().toLocal()}".split(' ')[0]
                         : "${dewormTime!.toLocal()}".split(' ')[0]),
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -102,23 +143,108 @@ class DetailPageState extends State<DetailPage>{
                       }
                     },
                   ),
+                ],
+          ]),
+          Row(
+              children: [
+                Checkbox(
+                  value: fleaCheck, 
+                  onChanged: (bool? value) {setState(() => fleaCheck = value ?? false);},
+                  activeColor: Colors.lightBlue,
+                  ),
+                  Text("Flea"),
+                  if (fleaCheck) ...[
+                
                   SizedBox(width: 12),
                   DropdownButton<String>(
                     hint: Text("Type"),
-                    value: dewormType,
-                    items: dewormTypes
-                        .map((type) => DropdownMenuItem(
-                            value: type, child: Text(type)))
-                        .toList(),
+                    value: fleaType,
+                    items: fleaTypes.map((type) => DropdownMenuItem(
+                            value: type, child: Text(type))).toList(),
                     onChanged: (value) {
-                      setState(() => dewormType = value);
+                      setState(() => fleaType = value);
                     },
                   ),
-                ],
-          ])
+                  SizedBox(width: 12),
+                  OutlinedButton(
+                    child: Text(fleaTime == null
+                        ? "${DateTime.now().toLocal()}".split(' ')[0]
+                        : "${fleaTime!.toLocal()}".split(' ')[0]),
+                    onPressed: () async {
+                      final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030));
+                      if (picked != null) {
+                        setState(() => fleaTime = picked);
+                      }
+                    },
+                  ),
+                  ]
+              ],),
+              Row(
+              children: [
+                Checkbox(
+                  value: fecalCheck, 
+                  onChanged: (bool? value) {setState(() => fecalCheck = value ?? false);},
+                  activeColor: Colors.lightBlue,
+                  ),
+                  Text("Fecal"),
+                  if (fecalCheck) ...[
+                    
+                  SizedBox(width: 12),
+                  DropdownButton<String>(
+                    hint: Text("Location"),
+                    value: fecalLocation,
+                    items: fecalLocations.map((type) => DropdownMenuItem(
+                            value: type, child: Text(type))).toList(),
+                    onChanged: (value) {
+                      setState(() => fecalLocation = value);
+                    },
+                  ),
+                   SizedBox(width: 12),
+                  OutlinedButton(
+                    child: Text(fecalTime == null
+                        ? "${DateTime.now().toLocal()}".split(' ')[0]
+                        : "${fecalTime!.toLocal()}".split(' ')[0]),
+                    onPressed: () async {
+                      final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030));
+                      if (picked != null) {
+                        setState(() => fecalTime = picked);
+                      }
+                    },
+                  ),
+                  ]
+              ],),
+              SizedBox(height: 15,),
+              Row(
+                children: [
+                  Text('Microchip'),
+                  SizedBox(width: 12),
+                  IconButton( 
+                    onPressed: null,
+                    iconSize: 30,
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.lightBlue,
+                      ),
+                    )
+                    ],
+                    ),
           ],
-          )
-      )
+          ),
+      ),
+      floatingActionButton: FloatingActionButton(
+      onPressed: () {},
+      backgroundColor: Colors.lightBlue,
+      foregroundColor: Colors.white,
+      child: Text('DONE'),
+      ),
       );
   }
 }
