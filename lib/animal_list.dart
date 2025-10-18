@@ -21,7 +21,4 @@ class AnimalListController {
         ));
   }
 
-  void removeAnimal(Animal animal) { //not implemented yet
-    animals.remove(animal);
-  }
 }

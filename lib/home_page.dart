@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 // ----------------ask about this license stuff---------------------
 
+import 'package:dogwood_app/animal.dart';
 import 'package:dogwood_app/animal_dialog.dart';
 import 'package:dogwood_app/animal_list.dart';
 import 'package:dogwood_app/detail_page.dart';
@@ -62,17 +63,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                     title: Text(animal.name),
                     onTap: () async {
-                      final updatedAnimal = await Navigator.push(
+                      dynamic result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailPage(animal: animal),
                         ),
                       );
-                      if (updatedAnimal != null) { //animal data only changed if DONE button is pressed, not back arrow (back arrow returns null)
+                      if (result == 'delete') {
+                        setState(() {
+                        controller.animals.remove(animal);
+                        });
+                      } else if (result is Animal) { //animal data only changed if DONE button is pressed, not back arrow (back arrow returns null)
                         setState(() {
                         final index = controller.animals.indexOf(animal);
                         if (index != -1) {
-                          controller.animals[index] = updatedAnimal;
+                          controller.animals[index] = result;
                         }
                       });
                     }
