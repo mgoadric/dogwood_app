@@ -32,6 +32,7 @@ class DetailPageState extends State<DetailPage> {
   final ImageController imageController = ImageController();
   String? recognizedNumber;
   TextEditingController _numberController = TextEditingController(text: '');
+  String? microchipNum;
 
   Future<String> recognizeText(File imageFile) async {
     final inputImage = InputImage.fromFile(imageFile);
@@ -69,6 +70,8 @@ class DetailPageState extends State<DetailPage> {
     fecalLocation = widget.animal.fecalLocation;
     fecalTime = widget.animal.fecalTime;
 
+    microchipNum = widget.animal.microchipNum;
+
     _numberController = TextEditingController(text: recognizedNumber ?? '');
   }
 
@@ -94,6 +97,7 @@ class DetailPageState extends State<DetailPage> {
     widget.animal.fecalStatus = fecalCheck;
     widget.animal.fecalLocation = fecalLocation;
     widget.animal.fecalTime = fecalTime;
+    widget.animal.microchipNum = microchipNum;
 
     // Save the animal document to Firestore
     try {
@@ -141,257 +145,276 @@ class DetailPageState extends State<DetailPage> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: vaccineCheck,
-                  onChanged: (bool? value) {
-                    setState(() => vaccineCheck = value ?? false);
-                  },
-                  activeColor: Colors.lightBlue,
-                ),
-                Text("Vaccine"),
-                if (vaccineCheck) ...[
-                  SizedBox(width: 12),
-                  DropdownButton<String>(
-                    hint: Text("Type"),
-                    value: vaccineType,
-                    items: vaccineTypes
-                        .map(
-                          (type) =>
-                              DropdownMenuItem(value: type, child: Text(type)),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => vaccineType = value);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: vaccineCheck,
+                    onChanged: (bool? value) {
+                      setState(() => vaccineCheck = value ?? false);
                     },
+                    activeColor: Colors.lightBlue,
                   ),
-                  SizedBox(width: 12),
-                  OutlinedButton(
-                    child: Text(
-                      vaccineTime == null
-                          ? "${DateTime.now().toLocal()}".split(' ')[0]
-                          : "${vaccineTime!.toLocal()}".split(' ')[0],
+                  Text("Vaccine"),
+                  if (vaccineCheck) ...[
+                    SizedBox(width: 12),
+                    DropdownButton<String>(
+                      hint: Text("Type"),
+                      value: vaccineType,
+                      items: vaccineTypes
+                          .map(
+                            (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() => vaccineType = value);
+                      },
                     ),
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2024),
-                        lastDate: DateTime(2030),
-                      );
-                      if (picked != null) {
-                        setState(() => vaccineTime = picked);
-                      }
-                    },
-                  ),
-                ],
-              ],
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  value: dewormCheck,
-                  onChanged: (bool? value) {
-                    setState(() => dewormCheck = value ?? false);
-                  },
-                  activeColor: Colors.lightBlue,
-                ),
-                Text("Deworm"),
-                if (dewormCheck) ...[
-                  SizedBox(width: 12),
-                  DropdownButton<String>(
-                    hint: Text("Type"),
-                    value: dewormType,
-                    items: dewormTypes
-                        .map(
-                          (type) =>
-                              DropdownMenuItem(value: type, child: Text(type)),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => dewormType = value);
-                    },
-                  ),
-                  SizedBox(width: 12),
-                  OutlinedButton(
-                    child: Text(
-                      dewormTime == null
-                          ? "${DateTime.now().toLocal()}".split(' ')[0]
-                          : "${dewormTime!.toLocal()}".split(' ')[0],
-                    ),
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                      );
-                      if (picked != null) {
-                        setState(() => dewormTime = picked);
-                      }
-                    },
-                  ),
-                ],
-              ],
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  value: fleaCheck,
-                  onChanged: (bool? value) {
-                    setState(() => fleaCheck = value ?? false);
-                  },
-                  activeColor: Colors.lightBlue,
-                ),
-                Text("Flea"),
-                if (fleaCheck) ...[
-                  SizedBox(width: 12),
-                  DropdownButton<String>(
-                    hint: Text("Type"),
-                    value: fleaType,
-                    items: fleaTypes
-                        .map(
-                          (type) =>
-                              DropdownMenuItem(value: type, child: Text(type)),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => fleaType = value);
-                    },
-                  ),
-                  SizedBox(width: 12),
-                  OutlinedButton(
-                    child: Text(
-                      fleaTime == null
-                          ? "${DateTime.now().toLocal()}".split(' ')[0]
-                          : "${fleaTime!.toLocal()}".split(' ')[0],
-                    ),
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2024),
-                        lastDate: DateTime(2030),
-                      );
-                      if (picked != null) {
-                        setState(() => fleaTime = picked);
-                      }
-                    },
-                  ),
-                ],
-              ],
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  value: fecalCheck,
-                  onChanged: (bool? value) {
-                    setState(() => fecalCheck = value ?? false);
-                  },
-                  activeColor: Colors.lightBlue,
-                ),
-                Text("Fecal"),
-                if (fecalCheck) ...[
-                  SizedBox(width: 12),
-                  DropdownButton<String>(
-                    hint: Text("Location"),
-                    value: fecalLocation,
-                    items: fecalLocations
-                        .map(
-                          (type) =>
-                              DropdownMenuItem(value: type, child: Text(type)),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() => fecalLocation = value);
-                    },
-                  ),
-                  SizedBox(width: 12),
-                  OutlinedButton(
-                    child: Text(
-                      fecalTime == null
-                          ? "${DateTime.now().toLocal()}".split(' ')[0]
-                          : "${fecalTime!.toLocal()}".split(' ')[0],
-                    ),
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2024),
-                        lastDate: DateTime(2030),
-                      );
-                      if (picked != null) {
-                        setState(() => fecalTime = picked);
-                      }
-                    },
-                  ),
-                ],
-              ],
-            ),
-            SizedBox(height: 15),
-            Row(
-              children: [
-                Text('Microchip'),
-                SizedBox(width: 12),
-                IconButton(
-                  onPressed: () async {
-                    // Find the first available camera
-                    final cameras = await availableCameras();
-                    final firstCamera = cameras.first;
-
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CameraScreen(
-                          camera: firstCamera,
-                          imageController: imageController,
-                        ),
+                    SizedBox(width: 12),
+                    OutlinedButton(
+                      child: Text(
+                        vaccineTime == null
+                            ? "${DateTime.now().toLocal()}".split(' ')[0]
+                            : "${vaccineTime!.toLocal()}".split(' ')[0],
                       ),
-                    );
-                    if (imageController.image != null) {
-                      final recognizedText = await recognizeText(
-                        imageController.image!,
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030),
+                        );
+                        if (picked != null) {
+                          setState(() => vaccineTime = picked);
+                        }
+                      },
+                    ),
+                  ],
+                ],
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: dewormCheck,
+                    onChanged: (bool? value) {
+                      setState(() => dewormCheck = value ?? false);
+                    },
+                    activeColor: Colors.lightBlue,
+                  ),
+                  Text("Deworm"),
+                  if (dewormCheck) ...[
+                    SizedBox(width: 12),
+                    DropdownButton<String>(
+                      hint: Text("Type"),
+                      value: dewormType,
+                      items: dewormTypes
+                          .map(
+                            (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() => dewormType = value);
+                      },
+                    ),
+                    SizedBox(width: 12),
+                    OutlinedButton(
+                      child: Text(
+                        dewormTime == null
+                            ? "${DateTime.now().toLocal()}".split(' ')[0]
+                            : "${dewormTime!.toLocal()}".split(' ')[0],
+                      ),
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                        );
+                        if (picked != null) {
+                          setState(() => dewormTime = picked);
+                        }
+                      },
+                    ),
+                  ],
+                ],
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: fleaCheck,
+                    onChanged: (bool? value) {
+                      setState(() => fleaCheck = value ?? false);
+                    },
+                    activeColor: Colors.lightBlue,
+                  ),
+                  Text("Flea"),
+                  if (fleaCheck) ...[
+                    SizedBox(width: 12),
+                    DropdownButton<String>(
+                      hint: Text("Type"),
+                      value: fleaType,
+                      items: fleaTypes
+                          .map(
+                            (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() => fleaType = value);
+                      },
+                    ),
+                    SizedBox(width: 12),
+                    OutlinedButton(
+                      child: Text(
+                        fleaTime == null
+                            ? "${DateTime.now().toLocal()}".split(' ')[0]
+                            : "${fleaTime!.toLocal()}".split(' ')[0],
+                      ),
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030),
+                        );
+                        if (picked != null) {
+                          setState(() => fleaTime = picked);
+                        }
+                      },
+                    ),
+                  ],
+                ],
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: fecalCheck,
+                    onChanged: (bool? value) {
+                      setState(() => fecalCheck = value ?? false);
+                    },
+                    activeColor: Colors.lightBlue,
+                  ),
+                  Text("Fecal"),
+                  if (fecalCheck) ...[
+                    SizedBox(width: 12),
+                    DropdownButton<String>(
+                      hint: Text("Location"),
+                      value: fecalLocation,
+                      items: fecalLocations
+                          .map(
+                            (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() => fecalLocation = value);
+                      },
+                    ),
+                    SizedBox(width: 12),
+                    OutlinedButton(
+                      child: Text(
+                        fecalTime == null
+                            ? "${DateTime.now().toLocal()}".split(' ')[0]
+                            : "${fecalTime!.toLocal()}".split(' ')[0],
+                      ),
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030),
+                        );
+                        if (picked != null) {
+                          setState(() => fecalTime = picked);
+                        }
+                      },
+                    ),
+                  ],
+                ],
+              ),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Text('Microchip'),
+                  SizedBox(width: 12),
+                  IconButton(
+                    onPressed: () async {
+                      // Find the first available camera
+                      final cameras = await availableCameras();
+                      final firstCamera = cameras.first;
+
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CameraScreen(
+                            camera: firstCamera,
+                            imageController: imageController,
+                          ),
+                        ),
                       );
-                      final number = extractNIK(recognizedText);
-                      setState(() {
-                        recognizedNumber = number;
-                        _numberController.text = number;
-                      });
-                    }
+                      if (imageController.image != null) {
+                        final recognizedText = await recognizeText(
+                          imageController.image!,
+                        );
+                        final number = extractNIK(recognizedText);
+                        setState(() {
+                          recognizedNumber = number;
+                          _numberController.text = number;
+                        });
+                      }
+                    },
+                    iconSize: 30,
+                    icon: const Icon(Icons.add, color: Colors.lightBlue),
+                  ),
+                  if (microchipNum != null && microchipNum!.isNotEmpty) ...[
+                    SizedBox(width: 12),
+                    Text(
+                      microchipNum!,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              SizedBox(height: 12),
+              if (imageController.image != null) ...[
+                ClipRect(
+                  child: Image.file(
+                    imageController.image!,
+                    width: 400,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _numberController,
+                  decoration: InputDecoration(
+                    labelText: 'Number Found - Tap to edit',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    recognizedNumber = value;
                   },
-                  iconSize: 30,
-                  icon: const Icon(Icons.add, color: Colors.lightBlue),
                 ),
               ],
-            ),
-            SizedBox(height: 12),
-            if (imageController.image != null) ...[
-              ClipRect(
-                child: Image.file(
-                  imageController.image!,
-                  width: 400,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            SizedBox(height: 15),
-            TextField(
-              controller: _numberController,
-              decoration: InputDecoration(
-                labelText: 'Number Found - Tap to edit',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                recognizedNumber =
-                    value; 
-              },
-            ),]
-          ],
-        ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -465,9 +488,11 @@ class DetailPageState extends State<DetailPage> {
                   widget.animal.fecalLocation = fecalLocation;
                   widget.animal.fecalTime = fecalTime;
 
-                  print('Saving animal...');
+                  widget.animal.microchipNum = recognizedNumber;
+                  microchipNum = recognizedNumber;
+
+                  
                   await _saveToFirestore();
-                  print('Save complete, popping...');
                   Navigator.pop(context);
                 },
                 backgroundColor: Colors.lightBlue,

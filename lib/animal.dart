@@ -24,7 +24,7 @@ class Animal {
     this.fecalLocation,
     this.fecalTime,
 
-    this.photoUrl
+    this.microchipNum,
     });
 
   String? id;
@@ -46,7 +46,7 @@ class Animal {
   String? fecalLocation;
   DateTime? fecalTime;
 
-  String? photoUrl;
+  String? microchipNum;
 
 
    static DateTime? _parseDate(dynamic value) {
@@ -71,7 +71,7 @@ class Animal {
       'fecalStatus': fecalStatus,
       'fecalLocation': fecalLocation,
       'fecalTime': fecalTime != null ? Timestamp.fromDate(fecalTime!) : null,
-      'photoUrl': photoUrl,
+      'microchipNum': microchipNum,
     };
   }
 
@@ -91,6 +91,7 @@ class Animal {
       fecalStatus: map['fecalStatus'] ?? false,
       fecalLocation: map['fecalLocation'],
       fecalTime: _parseDate(map['fecalTime']),
+      microchipNum: map['microchipNum'],
     );
   }
 
