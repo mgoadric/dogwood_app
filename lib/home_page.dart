@@ -17,6 +17,7 @@ import 'src/authentication.dart';
 class HomePage extends StatefulWidget {
   HomePage({super.key});
   final TextEditingController textController = TextEditingController();
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -33,19 +34,34 @@ class _HomePageState extends State<HomePage> {
       fecalStatus: false,
     );
 
-    DocumentReference docRef = await FirebaseFirestore.instance
-        .collection('animals')
-        .add({
-          ...newAnimal.toMap(), // add the new animal to collection
-          'createdAt': FieldValue.serverTimestamp(), // keep track of when animal was created to sort by most recent
-        }); 
+    DocumentReference
+    docRef = await FirebaseFirestore.instance.collection('animals').add({
+      ...newAnimal.toMap(), // add the new animal to collection
+      'createdAt':
+          FieldValue.serverTimestamp(), // keep track of when animal was created to sort by most recent
+    });
     newAnimal.id = docRef.id;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
+      appBar: AppBar(
+        title: Row(
+    children: [
+      Image.asset(
+  'images/Logo3.png',
+  height: 90,
+  fit: BoxFit.contain,
+),
+      SizedBox(width: 10), 
+      Text(
+        'Home Page',
+        style: TextStyle(color: Colors.white),
+      ),
+    ],
+  ),
+        ),
       body: Consumer<ApplicationState>(
         builder: (context, appState, _) {
           return ListView(
@@ -53,25 +69,37 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  AuthFunc( // this is the login/logout button
+                  AuthFunc(
+                    // this is the login/logout button
                     loggedIn: appState.loggedIn,
                     signOut: () {
                       FirebaseAuth.instance.signOut();
                     },
                   ),
-                  if (appState.loggedIn) SizedBox(width: 10), // only show search box if logged in
+                  if (appState.loggedIn)
+                    SizedBox(width: 10), // only show search box if logged in
                   Expanded(
-                    child: TextField(
-                      controller: widget.textController,
-                      decoration: InputDecoration(
-                        labelText: 'Search by name',
-                        border: OutlineInputBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: TextField(
+                        controller: widget.textController,
+                        decoration: InputDecoration(
+                          labelText: 'Search by name',
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF0A5879),
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value
+                                .toLowerCase(); // ignore case differences in search
+                          });
+                        },
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value.toLowerCase(); // ignore case differences in search
-                        });
-                      },
                     ),
                   ),
                 ],
@@ -82,19 +110,27 @@ class _HomePageState extends State<HomePage> {
                   vertical: 2.0,
                   horizontal: 10.0,
                 ),
-                child: StreamBuilder<QuerySnapshot>( // build the list based on firestore database
+                child: StreamBuilder<QuerySnapshot>(
+                  // build the list based on firestore database
                   stream: FirebaseFirestore.instance
                       .collection('animals')
-                      .orderBy('createdAt', descending: true) // order by most recently added
+                      .orderBy(
+                        'createdAt',
+                        descending: true,
+                      ) // order by most recently added
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Please log in to view animals'); // if anything is going wrong, probably not logged in
+                      return Text(
+                        'Please log in to view animals',
+                      ); // if anything is going wrong, probably not logged in
                     }
                     if (!snapshot.hasData) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    final animals = snapshot.data!.docs // create list of animals based on firestore data
+                    final animals = snapshot
+                        .data!
+                        .docs // create list of animals based on firestore data
                         .map(
                           (doc) => Animal.fromMap(
                             doc.data() as Map<String, dynamic>,
@@ -103,23 +139,30 @@ class _HomePageState extends State<HomePage> {
                         )
                         .toList();
                     final filteredAnimals = animals.where((animal) {
-                      return animal.name.toLowerCase().contains(searchQuery); // if something in search box, only show animals that contain letters from search
+                      return animal.name.toLowerCase().contains(
+                        searchQuery,
+                      ); // if something in search box, only show animals that contain letters from search
                     }).toList();
 
                     return Column(
                       children: filteredAnimals.map((animal) {
                         return ListTile(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 2, color: Colors.lightBlue),
+                            side: BorderSide(width: 2, color: Colors.white),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          title: Text(animal.name),
+                          tileColor: Color(0xFF0A5879),
+                          title: Text(
+                            animal.name,
+                            style: TextStyle(color: Colors.white),
+                          ),
                           onTap: () async {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailPage(animal: animal), // if animal tile is pressed, go to its page
+                                builder: (context) => DetailPage(
+                                  animal: animal,
+                                ), // if animal tile is pressed, go to its page
                               ),
                             );
                           },
@@ -137,7 +180,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context, appState, _) => appState.loggedIn
             ? FloatingActionButton(
                 key: const Key("AddButton"),
-                backgroundColor: Colors.lightBlue,
+                backgroundColor: Color(0xFF0A5879),
                 foregroundColor: Colors.white,
                 child: const Icon(Icons.add),
                 onPressed: () {

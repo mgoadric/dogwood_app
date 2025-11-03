@@ -7,25 +7,28 @@ import 'package:dogwood_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; 
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
-import 'app_state.dart'; 
+import 'app_state.dart';
 import 'home_page.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 late List<CameraDescription> _cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-_cameras = await availableCameras();
-  runApp(ChangeNotifierProvider(
-    create: (context) => ApplicationState(),
-    builder: ((context, child) => const App()),
-  ));
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  _cameras = await availableCameras();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ApplicationState(),
+      builder: ((context, child) => const App()),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -36,12 +39,24 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       title: 'Sign-In Page',
       theme: ThemeData(
-        buttonTheme: Theme.of(context).buttonTheme.copyWith(
-              highlightColor: Colors.blue,
-            ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFF0A5879), 
+          brightness: Brightness.light, 
+        ),
+        buttonTheme: Theme.of(
+          context,
+        ).buttonTheme.copyWith(highlightColor: Color(0xFF0A5879)),
         primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.robotoTextTheme(
-          Theme.of(context).textTheme,
+        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(0xFF0A5879),
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
@@ -65,9 +80,7 @@ final _router = GoRouter(
                 ForgotPasswordAction(((context, email) {
                   final uri = Uri(
                     path: '/sign-in/forgot-password',
-                    queryParameters: <String, String?>{
-                      'email': email,
-                    },
+                    queryParameters: <String, String?>{'email': email},
                   );
                   context.push(uri.toString());
                 })),
@@ -75,7 +88,7 @@ final _router = GoRouter(
                   final user = switch (state) {
                     SignedIn state => state.user,
                     UserCreated state => state.credential.user,
-                    _ => null
+                    _ => null,
                   };
                   if (user == null) {
                     return;
@@ -86,8 +99,10 @@ final _router = GoRouter(
                   if (!user.emailVerified) {
                     user.sendEmailVerification();
                     const snackBar = SnackBar(
-                        content: Text(
-                            'Please check your email to verify your email address'));
+                      content: Text(
+                        'Please check your email to verify your email address',
+                      ),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                   context.pushReplacement('/');
@@ -109,7 +124,8 @@ final _router = GoRouter(
           ],
         ),
         GoRoute(
-          path: 'profile',   //this path is commented out in authentication.dart until I'm ready to deal with it
+          path:
+              'profile', //this path is commented out in authentication.dart until I'm ready to deal with it
           builder: (context, state) {
             return ProfileScreen(
               providers: const [],
@@ -123,6 +139,5 @@ final _router = GoRouter(
         ),
       ],
     ),
-  
   ],
 );

@@ -1,12 +1,12 @@
-import 'dart:io';
 
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dogwood_app/animal.dart';
 import 'package:dogwood_app/camera_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+
 
 class DetailPage extends StatefulWidget {
   final Animal animal;
@@ -113,6 +113,9 @@ class DetailPageState extends State<DetailPage> {
     await docRef.delete();
   }
 
+
+
+
   final List<String> vaccineTypes = ['DAP', 'DAPL', 'LEPTO', 'FVRCP', 'Other'];
 
   final List<String> dewormTypes = [
@@ -153,7 +156,7 @@ class DetailPageState extends State<DetailPage> {
                     onChanged: (bool? value) {
                       setState(() => vaccineCheck = value ?? false);
                     },
-                    activeColor: Colors.lightBlue,
+                    activeColor: Color(0xFF0A5879),
                   ),
                   Text("Vaccine"),
                   if (vaccineCheck) ...[
@@ -202,7 +205,7 @@ class DetailPageState extends State<DetailPage> {
                     onChanged: (bool? value) {
                       setState(() => dewormCheck = value ?? false);
                     },
-                    activeColor: Colors.lightBlue,
+                    activeColor: Color(0xFF0A5879),
                   ),
                   Text("Deworm"),
                   if (dewormCheck) ...[
@@ -251,7 +254,7 @@ class DetailPageState extends State<DetailPage> {
                     onChanged: (bool? value) {
                       setState(() => fleaCheck = value ?? false);
                     },
-                    activeColor: Colors.lightBlue,
+                    activeColor: Color(0xFF0A5879),
                   ),
                   Text("Flea"),
                   if (fleaCheck) ...[
@@ -300,7 +303,7 @@ class DetailPageState extends State<DetailPage> {
                     onChanged: (bool? value) {
                       setState(() => fecalCheck = value ?? false);
                     },
-                    activeColor: Colors.lightBlue,
+                    activeColor: Color(0xFF0A5879),
                   ),
                   Text("Fecal"),
                   if (fecalCheck) ...[
@@ -373,7 +376,7 @@ class DetailPageState extends State<DetailPage> {
                       }
                     },
                     iconSize: 30,
-                    icon: const Icon(Icons.add, color: Colors.lightBlue),
+                    icon: const Icon(Icons.add, color: Color(0xFF0A5879)),
                   ),
                   if (microchipNum != null && microchipNum!.isNotEmpty) ...[ // if animal has a microchip # display it here
                     SizedBox(width: 12),
@@ -440,7 +443,7 @@ class DetailPageState extends State<DetailPage> {
                           onPressed: () => Navigator.of(context).pop(false),
                           child: const Text(
                             'Cancel',
-                            style: TextStyle(color: Colors.lightBlue),
+                            style: TextStyle(color: Color(0xFF0A5879)),
                           ),
                         ),
                         TextButton(
@@ -462,7 +465,7 @@ class DetailPageState extends State<DetailPage> {
                 label: Text(
                   'Delete Animal',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Color(0xFF0A5879),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -492,7 +495,7 @@ class DetailPageState extends State<DetailPage> {
                   await _saveToFirestore(); // save all updates to firestore before closing page
                   Navigator.pop(context);
                 },
-                backgroundColor: Colors.lightBlue,
+                backgroundColor: Color(0xFF0A5879),
                 foregroundColor: Colors.white,
                 child: Text('SAVE'),
               ),
