@@ -26,8 +26,20 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = '';
 
   Future<void> handleNewAnimal(String animalName) async {
+  final existing = await FirebaseFirestore.instance //check to make sure the animal hasn't alread been made
+    .collection('animals')
+    .where('nameLower', isEqualTo: animalName.toLowerCase()) //make sure it's case-insensitive
+    .get();
+  
+  if (existing.docs.isNotEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An animal with that name already exists.'))
+    );
+    return;
+  }
     Animal newAnimal = Animal(
       name: animalName,
+      nameLower: animalName.toLowerCase(),
       vaccineStatus: false,
       dewormStatus: false,
       fleaStatus: false,

@@ -4,6 +4,7 @@ class Animal {
   Animal({
     this.id,
     required this.name,
+    required this.nameLower,
 
     required this.vaccineStatus,
     this.vaccineType,
@@ -29,6 +30,7 @@ class Animal {
 
   String? id;
   final String name;
+  final String nameLower;
 
   bool vaccineStatus;
   String? vaccineType;
@@ -63,6 +65,7 @@ class Animal {
     // mapping for firebase
     return {
       'name': name,
+      'nameLower' : nameLower,
       'vaccineStatus': vaccineStatus,
       'vaccineType': vaccineType,
       'vaccineTime': vaccineTime != null
@@ -87,6 +90,7 @@ class Animal {
     return Animal(
       id: id,
       name: map['name'] ?? '',
+      nameLower: map['nameLower'] ?? '',
       vaccineStatus: map['vaccineStatus'] ?? false,
       vaccineType: map['vaccineType'],
       vaccineTime: _parseDate(map['vaccineTime']),
