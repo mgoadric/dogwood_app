@@ -26,6 +26,8 @@ class Animal {
 
     this.lastUpdated,
     this.lastViewed,
+
+    this.notes,
   });
 
   String? id;
@@ -52,6 +54,8 @@ class Animal {
 
   Timestamp? lastUpdated;
   Timestamp? lastViewed;
+
+  String? notes;
 
   static DateTime? _parseDate(dynamic value) {
     // firebase gets confused if you dont do this
@@ -83,6 +87,7 @@ class Animal {
       'microchipNum': microchipNum,
       'lastUpdated': lastUpdated,
       'lastViewed': lastViewed,
+      'notes': notes,
     };
   }
 
@@ -106,6 +111,7 @@ class Animal {
       microchipNum: map['microchipNum'],
       lastUpdated: map['lastUpdated'] is Timestamp ? map['lastUpdated'] as Timestamp : null,
       lastViewed: map['lastViewed'] is Timestamp ? map['lastViewed'] as Timestamp : null,
+      notes: map['notes'] ?? '',
     );
   }
 }

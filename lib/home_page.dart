@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     .get();
   
   if (existing.docs.isNotEmpty) {
+    FocusScope.of(context).unfocus();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('An animal with that name already exists.'))
     );
@@ -56,8 +57,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => GestureDetector( 
+    onTap: () => FocusScope.of(context).unfocus(), //this makes it where if you tap the screen while the keyboard is up, the keyboard is dismissed
+    child: Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
@@ -243,6 +245,6 @@ class _HomePageState extends State<HomePage> {
               )
             : SizedBox.shrink(),
       ),
-    );
+    ),);
   }
-}
+
