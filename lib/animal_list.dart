@@ -6,6 +6,7 @@ class AnimalListController {
   final List<Animal> animals = [
     Animal(
       name: "Dog", 
+      nameLower: "dog",
       vaccineStatus: false, 
       dewormStatus: false, 
       fleaStatus: false, 

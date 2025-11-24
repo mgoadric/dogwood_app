@@ -1,7 +1,7 @@
 // Copyright 2022 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// ----------------ask about this license stuff---------------------
+
 
 import 'package:dogwood_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
