@@ -4,6 +4,7 @@ class Animal {
   Animal({
     this.id,
     required this.name,
+    required this.nameLower,
 
     required this.vaccineStatus,
     this.vaccineType,
@@ -25,10 +26,13 @@ class Animal {
 
     this.lastUpdated,
     this.lastViewed,
+
+    this.notes,
   });
 
   String? id;
   final String name;
+  final String nameLower;
 
   bool vaccineStatus;
   String? vaccineType;
@@ -51,6 +55,8 @@ class Animal {
   Timestamp? lastUpdated;
   Timestamp? lastViewed;
 
+  String? notes;
+
   static DateTime? _parseDate(dynamic value) {
     // firebase gets confused if you dont do this
     if (value == null) return null;
@@ -63,6 +69,7 @@ class Animal {
     // mapping for firebase
     return {
       'name': name,
+      'nameLower' : nameLower,
       'vaccineStatus': vaccineStatus,
       'vaccineType': vaccineType,
       'vaccineTime': vaccineTime != null
@@ -80,6 +87,7 @@ class Animal {
       'microchipNum': microchipNum,
       'lastUpdated': lastUpdated,
       'lastViewed': lastViewed,
+      'notes': notes,
     };
   }
 
@@ -87,6 +95,7 @@ class Animal {
     return Animal(
       id: id,
       name: map['name'] ?? '',
+      nameLower: map['nameLower'] ?? '',
       vaccineStatus: map['vaccineStatus'] ?? false,
       vaccineType: map['vaccineType'],
       vaccineTime: _parseDate(map['vaccineTime']),
@@ -102,6 +111,7 @@ class Animal {
       microchipNum: map['microchipNum'],
       lastUpdated: map['lastUpdated'] is Timestamp ? map['lastUpdated'] as Timestamp : null,
       lastViewed: map['lastViewed'] is Timestamp ? map['lastViewed'] as Timestamp : null,
+      notes: map['notes'] ?? '',
     );
   }
 }

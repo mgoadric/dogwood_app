@@ -26,8 +26,21 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = '';
 
   Future<void> handleNewAnimal(String animalName) async {
+  final existing = await FirebaseFirestore.instance //check to make sure the animal hasn't alread been made
+    .collection('animals')
+    .where('nameLower', isEqualTo: animalName.toLowerCase()) //make sure it's case-insensitive
+    .get();
+  
+  if (existing.docs.isNotEmpty) {
+    FocusScope.of(context).unfocus();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An animal with that name already exists.'))
+    );
+    return;
+  }
     Animal newAnimal = Animal(
       name: animalName,
+      nameLower: animalName.toLowerCase(),
       vaccineStatus: false,
       dewormStatus: false,
       fleaStatus: false,
@@ -44,8 +57,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => GestureDetector( 
+    onTap: () => FocusScope.of(context).unfocus(), //this makes it where if you tap the screen while the keyboard is up, the keyboard is dismissed
+    child: Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
@@ -231,6 +245,6 @@ class _HomePageState extends State<HomePage> {
               )
             : SizedBox.shrink(),
       ),
-    );
+    ),);
   }
-}
+

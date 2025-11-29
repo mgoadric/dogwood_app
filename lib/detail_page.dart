@@ -32,6 +32,8 @@ class DetailPageState extends State<DetailPage> {
   String? recognizedNumber;
   TextEditingController _numberController = TextEditingController(text: '');
   String? microchipNum;
+  TextEditingController _notesController = TextEditingController();
+  String? notes;
 
   Future<String> recognizeText(File imageFile) async {
     // https://pub.dev/packages/google_mlkit_text_recognition
@@ -80,6 +82,8 @@ class DetailPageState extends State<DetailPage> {
       text: recognizedNumber ?? '',
     ); // if there is a microchip number found, put that here. If not, leave it empty
 
+    _notesController.text = widget.animal.notes ?? '';
+
     updateLastViewed(widget.animal.id!);
   }
 
@@ -108,6 +112,7 @@ class DetailPageState extends State<DetailPage> {
     widget.animal.fecalLocation = fecalLocation;
     widget.animal.fecalTime = fecalTime;
     widget.animal.microchipNum = microchipNum;
+    widget.animal.notes = _notesController.text;
 
     try {
       await docRef.set({
@@ -128,17 +133,17 @@ class DetailPageState extends State<DetailPage> {
   }
 
   Future<void> updateLastViewed(String animalId) async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final docRef = FirebaseFirestore.instance
-    .collection('users')
-    .doc(uid)
-    .collection('animalViews')
-    .doc(animalId);
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('animalViews')
+        .doc(animalId);
 
-  await docRef.set({
-    'lastViewed': FieldValue.serverTimestamp(),
-  }, SetOptions(merge: true));
-}
+    await docRef.set({
+      'lastViewed': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
 
   final List<String> vaccineTypes = ['DAP', 'DAPL', 'LEPTO', 'FVRCP', 'Other'];
 
@@ -164,8 +169,9 @@ class DetailPageState extends State<DetailPage> {
   final List<String> fecalLocations = ['AK', 'Dr. B', 'NT', 'TAH', 'Other'];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => GestureDetector( 
+    onTap: () => FocusScope.of(context).unfocus(), //this makes it where if you tap the screen while the keyboard is up, the keyboard is dismissed
+    child: Scaffold(
       appBar: AppBar(title: Text(widget.animal.name)),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -441,6 +447,24 @@ class DetailPageState extends State<DetailPage> {
                   },
                 ),
               ],
+              SizedBox(height: 16),
+              Text(
+                'Additional Notes',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              TextField(
+                controller: _notesController,
+                minLines: 4,
+                maxLines: null,
+                decoration: InputDecoration(
+                  hintText: 'Tap to write notes',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  notes = value;
+                },
+              ),
             ],
           ),
         ),
@@ -532,6 +556,6 @@ class DetailPageState extends State<DetailPage> {
           ),
         ),
       ),
-    );
+    ),);
   }
-}
+
